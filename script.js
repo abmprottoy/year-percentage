@@ -1,3 +1,13 @@
+// Converts English numerals to Bengali numerals
+function convertToBengaliNumerals(number) {
+  const englishToBengaliMap = {
+    '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪',
+    '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯',
+  };
+  return number.toString().split('').map(digit => englishToBengaliMap[digit] || digit).join('');
+}
+
+// Calculates year progress as passed and remaining percentages
 function calculateYearProgress() {
   const now = new Date();
   const startOfYear = new Date(now.getFullYear(), 0, 1);
@@ -13,21 +23,21 @@ function calculateYearProgress() {
   };
 }
 
-function updateProgressBar() {
-  const progress = document.querySelector('.progress-bar');
-  const percentageText = document.getElementById('percentage');
+// Updates the progress percentage display
+function updateProgress() {
+  const percentageElements = document.querySelectorAll('.percentage-value');
 
+  // Calculate year progress
   const { passed } = calculateYearProgress();
-  progress.style.width = `${passed}%`;
-  progress.setAttribute('aria-valuenow', passed);
-  percentageText.textContent = `${passed}%`;
+  const passedInBengali = convertToBengaliNumerals(passed);
 
-  return parseFloat(passed);
+  // Update all elements with the new percentage
+  percentageElements.forEach((element) => {
+    element.textContent = `${passedInBengali}%`;
+  });
 }
 
-google.charts.load('current', { packages: ['corechart'] });
-google.charts.setOnLoadCallback(drawChart);
-
+// Draws the Google Chart for year progress
 function drawChart() {
   const { passed, remaining } = calculateYearProgress();
 
@@ -39,32 +49,30 @@ function drawChart() {
 
   const options = {
     pieHole: 0.5,
-    colors: ['#E0E0E0','#128425' ],
+    colors: ['#E0E0E0', '#128425'], // Custom colors
     legend: { position: 'bottom' },
     pieSliceText: 'percentage',
     fontName: 'Noto Serif Bengali',
     pieSliceTextStyle: { color: 'white' },
-    animation: {
-      startup: true, // Enable animation on load
-      duration: 1500, // Duration of the animation in milliseconds
-      easing: 'out', // Easing function for smooth effect
-    },
+    animation: { startup: true, duration: 1000, easing: 'out' }, // Add animation
   };
 
   const chart = new google.visualization.PieChart(document.getElementById('donut_single'));
   chart.draw(data, options);
 }
 
-// Initialize and update periodically
+// Initialize and periodically update progress
 function initialize() {
-  updateProgressBar();
+  updateProgress();
   drawChart();
 
   // Update every minute
   setInterval(() => {
-    updateProgressBar();
+    updateProgress();
     drawChart();
   }, 60000);
 }
 
-initialize();
+// Load Google Charts and initialize app
+google.charts.load('current', { packages: ['corechart'] });
+google.charts.setOnLoadCallback(initialize);
