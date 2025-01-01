@@ -6,4 +6,8 @@
     font-variation-settings:
       "wdth" 100;
 }
+
+.progress-bar {
+  transition: width 1.5s ease-in-out;
+}
   
