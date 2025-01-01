@@ -1,0 +1,9 @@
+.bangla {
+    font-family: "Noto Serif Bengali", serif !important;
+    font-optical-sizing: auto;
+    font-weight: 400 !important;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+}
+  
