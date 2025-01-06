@@ -7,6 +7,19 @@ function convertToBengaliNumerals(number) {
   return number.toString().split('').map(digit => englishToBengaliMap[digit] || digit).join('');
 }
 
+// Updates the year dynamically in Bengali numerals
+function updateYear() {
+  const yearElements = document.querySelectorAll('.current-year');
+
+  const currentYear = new Date().getFullYear();
+  const yearInBengali = convertToBengaliNumerals(currentYear);
+
+  // Update all elements with the class 'current-year'
+  yearElements.forEach((element) => {
+    element.textContent = yearInBengali;
+  });
+}
+
 // Calculates year progress as passed and remaining percentages
 function calculateYearProgress() {
   const now = new Date();
@@ -63,6 +76,7 @@ function drawChart() {
 
 // Initialize and periodically update progress
 function initialize() {
+  updateYear();
   updateProgress();
   drawChart();
 
